@@ -1,11 +1,9 @@
 import asyncio
 import logging
-from aiogram.types import InputFile
-from aiogram import Bot, Dispatcher, types
-from aiogram.filters.command import Command
+from aiogram import Bot, Dispatcher
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
-from config import token
+from idea.config import token
 
 
 async def main():

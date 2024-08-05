@@ -1,6 +1,7 @@
 import asyncio
 import os
 import random
+import sqlite3
 
 from aiogram import Bot, types, Router
 from aiogram.client.default import DefaultBotProperties
@@ -11,7 +12,7 @@ from aiogram.filters.chat_member_updated import \
 from aiogram.types import FSInputFile, ChatMemberBanned, ChatMemberRestricted, URLInputFile
 from config_for_test import token
 from config import my_id, chat_id
-
+import pandas as pd
 
 bot = Bot(token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 router = Router()
@@ -80,6 +81,73 @@ async def handle_invite_request(message: types.Message):
             await message.reply(f"Произошла ошибка: {e}")
 
 
+@router.message(Command("accepted"))
+async def misha_house(message: types.Message):
+    con = sqlite3.connect('mafiadb.db')
+    cur = con.cursor()
+    sql = """\
+    SELECT * FROM perm_ids WHERE complete = 1
+    """
+    try:
+        cur.execute(sql)
+        mas = cur.fetchall()
+        ids = []
+        usernames = []
+        for i in range(len(mas)):
+            ids.append(mas[i][0])
+        for i in range(len(mas)):
+            usernames.append(mas[i][1])
+        s = """"""
+        for i in range(len(ids)):
+            s += f'<a href="tg://user?id={ids[i]}"> {usernames[i]}</a>\n'
+        print(s)
+        await message.answer(text=f'Список людей допущенных до квартирника у марки: {s}', parse_mode='HTML')
+    except sqlite3.DatabaseError as err:
+        print('Ошибка:', err)
+    else:
+        print('Успешно.')
+    cur.close()
+    con.close()
+
+
+@router.message(Command("tag"))
+async def who_did_test(message: types.Message):
+    con = sqlite3.connect('mafiadb.db')
+    cur = con.cursor()
+    sql = """\
+        SELECT * FROM perm_ids
+        """
+    try:
+        print(1)
+        cur.execute(sql)
+        mas = cur.fetchall()
+        ids = []
+        usernames = []
+        for i in range(len(mas)):
+            ids.append(mas[i][0])
+        for i in range(len(mas)):
+            usernames.append(mas[i][1])
+        print(ids)
+        print(usernames)
+        index = 0
+        for i in range(int((len(ids) / 5))):
+            s = """"""
+            for j in range(5):
+                s += f'<a href="tg://user?id={ids[i + j]}"> {usernames[i + j]}</a> '
+                index = i + j
+            await message.answer(text=s, parse_mode='HTML')
+        s = """"""
+        for i in range(index, len(ids)):
+            s += f'<a href="tg://user?id={ids[i]}"> {usernames[i]}</a> '
+        await message.answer(text=s, parse_mode='HTML')
+    except sqlite3.DatabaseError as err:
+        print('Ошибка:', err)
+    else:
+        print('Успешно.')
+    cur.close()
+    con.close()
+
+
 @router.message(Command("bye22"))
 async def ban_me(message: types.Message):
     await bot.ban_chat_member(chat_id=message.chat.id, user_id=my_id)
@@ -116,9 +184,9 @@ async def us(message: types.Message):
 
 @router.message(Command("send_one_pic"))
 async def us(message: types.Message):
-    agenda = FSInputFile(path='png_for_functions_handlers/Screenshot from 2024-08-04 18-26-03.png', filename='1.png')
+    agenda = FSInputFile(path='png_for_functions_handlers/Screenshot from 2024-08-05 16-53-52.png', filename='1.png')
     await bot.send_photo(chat_id=message.chat.id, photo=agenda)
-    await message.answer('куда память на ubuntu нахуй уходит я не понимаю')
+    await message.answer('так лучше?')
 
 
 @router.message(Command("wookie"))
@@ -156,7 +224,7 @@ async def send_songs(message: types.Message):
     #await message.answer("Нервы ура!")
 
 
-@router.message(Command("shutilock"))
+@router.message(Command("shuti_lock"))
 async def send_songs(message: types.Message):
     #audio = FSInputFile('nervy-kofe-mojj-drug.mp3')
     #await bot.send_audio(message.chat.id, audio)
@@ -231,11 +299,40 @@ async def what_about_wookie(message: types.Message):
     s3 = 'Бля мне кароче кажется иногда, что у вуки свой мир, где у нее нет этих сообщений, которые пишут здесь, и она поэтому о них не знает и не видит'
     s4 = 'мне иногда кажется что вуки не умеет читать'
     s5 = 'фраза вуки: Мы имеем право тупить!'
-    li = [s1, s2, s3, s4, s5]
+    s6 = 'фраза вуки: Мы не используем фразы по типу клянусь если что'
+    s7 = """Ребят хватит пожалуйста уже творить эту хрень и подъебывать хотя бы сегодня, я сказала что у меня нет настроения и это очень сильно раздражает, неужели нельзя это понять, у меня не стальные нервы и все это терпеть невозможно на постоянке, я не концентрируюсь на этом постоянно но сейчас это очень раздражает, хватит пожалуйста"""
+    li = [s1, s2, s3, s4, s5, s6, s7]
     ans = random.choice(li)
     await message.answer(ans)
+
 
 @router.message(Command("clean"))
 async def clean_bot_messages(message: types.Message):
     lis = []
     await bot.delete_messages(chat_id=message.chat.id, message_ids=lis)
+
+
+@router.message(Command("test_info"))
+async def clean_bot_messages(message: types.Message):
+    await message.answer('КРУТОЙ ТЕСТ УЖЕ ПРЯМО У МЕНЯ В ЛИЧКЕ!!! ПИШИ МНЕ КОММАНДУ /start В ЛС')
+
+
+@router.message(Command('china'))
+async def talk_about_china(message: types.Message):
+    s = """Кита́й или Маша Макима (кит. трад. 中國, упр. 中国, пиньинь Zhōngguó, палл. Чжунго), официальное название — Кита́йская Наро́дная
+     Респу́блика (сокр. КНР), (кит. трад. 中華人民共和國, упр. 中华人民共和国, пиньинь Zhōnghuá Rénmín Gònghéguó, палл. Чжунхуа
+      Жэньминь Гунхэго) — государство в Восточной Азии. Занимает 4-е место в мире по территории среди государств (9 598 962 км2),
+       уступая России, Канаде и США, а по численности населения — 1 411 750 000 жителей (без Тайваня, Гонконга и Макао) — второе 
+       после Индии. Уровень урбанизации равен 65 %. """
+    await message.answer(s)
+
+
+@router.message(Command('musor'))
+async def qw(message: types.Message):
+    await message.answer('алика ты такая пикми')
+
+
+@router.message(Command('weather'))
+async def krasniyday(message: types.Message):
+    df = pd.read_html('https://rp5.ru/%D0%9F%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0_%D0%B2_%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%BE%D0%B4%D0%B0%D1%80%D0%B5,_%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%BE%D0%B4%D0%B0%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%BA%D1%80%D0%B0%D0%B9')
+    print(df[8][0:10])

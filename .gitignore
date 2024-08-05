@@ -1,3 +1,10 @@
-#ignore files with bot token and tg ids
+#ignore files with bot token,tg id, bd
 config*
 my_account*
+*.bd
+bd.py
+
+#media
+mafia_photos/
+png_for_functions_handlers/
+png_for_bot/

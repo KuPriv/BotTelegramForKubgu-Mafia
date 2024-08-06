@@ -9,7 +9,8 @@ from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters import Command
 from aiogram.filters.chat_member_updated import \
     ChatMemberUpdatedFilter, IS_NOT_MEMBER, MEMBER
-from aiogram.types import FSInputFile, ChatMemberBanned, ChatMemberRestricted, URLInputFile
+from aiogram.types import FSInputFile, ChatMemberBanned, ChatMemberRestricted, URLInputFile, ReplyKeyboardRemove
+from aiogram.exceptions import TelegramBadRequest
 from config_for_test import token
 from config import my_id, chat_id
 import pandas as pd
@@ -182,6 +183,7 @@ async def us(message: types.Message):
     ref = '<a href=https://t.me/MafiososBot>/start@MafiososBot</a>'
     await message.answer('/start')
 
+
 @router.message(Command("send_one_pic"))
 async def us(message: types.Message):
     agenda = FSInputFile(path='png_for_functions_handlers/Screenshot from 2024-08-05 16-53-52.png', filename='1.png')
@@ -310,6 +312,7 @@ async def what_about_wookie(message: types.Message):
 async def clean_bot_messages(message: types.Message):
     lis = []
     await bot.delete_messages(chat_id=message.chat.id, message_ids=lis)
+
 
 
 @router.message(Command("test_info"))

@@ -58,28 +58,27 @@ async def handle_invite_request(message: types.Message):
     print("dp.chat_member()")
     user_status = await bot.get_chat_member(chat_id=message.chat.id, user_id=message.from_user.id)
     print(user_status)
-    if isinstance(user_status, ChatMemberBanned) or isinstance(user_status, ChatMemberRestricted):
-        print('i am called here (unban)')
-        try:
-            await bot.restrict_chat_member(
-                chat_id=message.chat.id,
-                user_id=message.from_user.id,
-                permissions=types.ChatPermissions(
-                    can_send_messages=True,
-                    can_send_media_messages=True,
-                    can_send_polls=True,
-                    can_send_other_messages=True,
-                    can_add_web_page_previews=True,
-                    can_invite_users=True,
-                    can_pin_messages=True
-                )
+    try:
+        await bot.restrict_chat_member(
+            chat_id=message.chat.id,
+            user_id=message.from_user.id,
+            permissions=types.ChatPermissions(
+                can_send_messages=True,
+                can_send_media_messages=True,
+                can_send_polls=True,
+                can_send_other_messages=True,
+                can_add_web_page_previews=True,
+                can_invite_users=True,
+                can_pin_messages=True
             )
-        except Exception as e:
-            await message.reply(f"Произошла ошибка: {e}")
-        try:
-            await bot.send_message(message.from_user.id, f'<a href="https://t.me/mafiaKUBGU">В пизду я бы не заходил сюда</a> ', parse_mode='HTML')
-        except Exception as e:
-            await message.reply(f"Произошла ошибка: {e}")
+        )
+        print("Send.")
+        await bot.send_message(message.from_user.id,
+                               f'<a href="https://t.me/mafiaKUBGU">В пизду я бы не заходил сюда</a> ',
+                               parse_mode='HTML')
+    except Exception as e:
+        await message.answer(f"Произошла ошибка: {e}")
+
 
 
 @router.message(Command("accepted"))
@@ -100,9 +99,11 @@ async def misha_house(message: types.Message):
             usernames.append(mas[i][1])
         s = """"""
         for i in range(len(ids)):
-            s += f'<a href="tg://user?id={ids[i]}"> {usernames[i]}</a>\n'
+            if ids[i] != 1239883887:
+                s += f'<a href="tg://user?id={ids[i]}"> {usernames[i]}</a>\n'
         print(s)
-        await message.answer(text=f'Список людей допущенных до квартирника у марки: {s}', parse_mode='HTML')
+        black_list = f'<a href="tg://user?id={1239883887}"> wookie</a>\n'
+        await message.answer(text=f'Список людей допущенных до квартирника у марки:\n {s} В черном списке: {black_list}', parse_mode='HTML')
     except sqlite3.DatabaseError as err:
         print('Ошибка:', err)
     else:
@@ -131,16 +132,16 @@ async def who_did_test(message: types.Message):
         print(ids)
         print(usernames)
         index = 0
-        for i in range(int((len(ids) / 5))):
+        for i in range(int((len(ids) / 5)) + 1):
             s = """"""
-            for j in range(5):
-                s += f'<a href="tg://user?id={ids[i + j]}"> {usernames[i + j]}</a> '
-                index = i + j
+            if len(ids) - (i * 5) >= 5:
+                for j in range(5):
+                    s += f'<a href="tg://user?id={ids[(i * 5) + j]}"> {usernames[(i * 5) + j]}</a> '
+            else:
+                for j in range(len(ids) - (i * 5)):
+                    s += f'<a href="tg://user?id={ids[(i * 5) + j]}"> {usernames[(i * 5) + j]}</a> '
             await message.answer(text=s, parse_mode='HTML')
-        s = """"""
-        for i in range(index, len(ids)):
-            s += f'<a href="tg://user?id={ids[i]}"> {usernames[i]}</a> '
-        await message.answer(text=s, parse_mode='HTML')
+
     except sqlite3.DatabaseError as err:
         print('Ошибка:', err)
     else:
@@ -180,8 +181,7 @@ async def us(message: types.Message):
 
 @router.message(Command("maf"))
 async def us(message: types.Message):
-    ref = '<a href=https://t.me/MafiososBot>/start@MafiososBot</a>'
-    await message.answer('/start')
+    await bot.send_message(chat_id="6643633703", text="ти педик бугагаг (я твое сообщени не вижу)")
 
 
 @router.message(Command("send_one_pic"))
@@ -303,7 +303,8 @@ async def what_about_wookie(message: types.Message):
     s5 = 'фраза вуки: Мы имеем право тупить!'
     s6 = 'фраза вуки: Мы не используем фразы по типу клянусь если что'
     s7 = """Ребят хватит пожалуйста уже творить эту хрень и подъебывать хотя бы сегодня, я сказала что у меня нет настроения и это очень сильно раздражает, неужели нельзя это понять, у меня не стальные нервы и все это терпеть невозможно на постоянке, я не концентрируюсь на этом постоянно но сейчас это очень раздражает, хватит пожалуйста"""
-    li = [s1, s2, s3, s4, s5, s6, s7]
+    s8 = """фраза вукиноида:Когда не будет видели чтобы армянка была росисткой?"""
+    li = [s1, s2, s3, s4, s5, s6, s7, s8]
     ans = random.choice(li)
     await message.answer(ans)
 
@@ -314,10 +315,83 @@ async def clean_bot_messages(message: types.Message):
     await bot.delete_messages(chat_id=message.chat.id, message_ids=lis)
 
 
-
 @router.message(Command("test_info"))
 async def clean_bot_messages(message: types.Message):
-    await message.answer('КРУТОЙ ТЕСТ УЖЕ ПРЯМО У МЕНЯ В ЛИЧКЕ!!! ПИШИ МНЕ КОММАНДУ /start В ЛС')
+    await message.answer('КРУТОЙ ТЕСТ УЖЕ ПРЯМО У МЕНЯ В ЛИЧКЕ!!! ПИШИ МНЕ КОМАНДУ /start В ЛС')
+
+
+@router.message(Command('makima'))
+async def best_func(message: types.Message):
+    await bot.send_message(chat_id=813252640, text=f'Я тебя люблю!!! вызвал: {message.from_user.first_name}')
+
+
+@router.message(Command('nasrek'))
+async def best_func(message: types.Message):
+    video = FSInputFile('videos_and_memes/narek.MOV', filename='NASREK')
+    await bot.send_video(message.chat.id, video)
+
+
+@router.message(Command('pigeon'))
+async def best_func(message: types.Message):
+    s = """ الأسْنَان.
+
+— لَحْظَةً مِنْ فَضْلِكَ.
+
+— تَفَضَّلِي.
+
+— شُكْرًا لَكُمْ عَلَى الِانْتِظَارِ. 
+عِيَادَةُ الْأَسْنَانِ مَفْتُوحَةٌ يَوْمِيًّا مِنَ السَّاعَةِ الثَّامِنَةِ صَبَاحًا إلَى السَّاعَةِ الْوَاحِدَةِ ظُهْرًا، وَمِنَ السَّاعَةِ السَّادِسَةِ مَسَاءً إِلَى السَّاعَةِ الْعَاشِرَةِ مَسَاءً، مَا عَدَا يَوْمِ الْجُمُعَةِ.
+
+— هَلْ يُمْكِنُ أنْ أحْجِزَ مَوْعِدًا بِالهَاتِفِ؟
+
+— نَعَمْ. تَفَضَّلْ. مَا الْمَوْعِدُ الْمُنَاسِبُ لَكُمْ؟
+
+— يَوْمُ الخَمِيسِ القَادِمِ السَّاعَةَ السَّادِسَةَ مَسَاءً.
+
+— هَذَا الْمَوْعِدُ مَحْجُوزٌ مَعَ الْأَسَفِ، هَلْ يُنَاسِبُكُمْ مَوْعِدٌ فِي السَّادِسَةِ والنِّصْفِ؟
+
+نَعَمْ، مُنَاسِبٌ إنْ شَاءَ اللهُ.
+
+— مَا اسْمُكُمْ؟
+
+— خَالِد مُرَاد
+
+— مَا رَقْمُ هَاتِفِكُمْ؟
+
+— 0540456357
+
+— تَمَّ حَجْزُ الْمَوْعِدِ فِي عِيَادَةِ الأَسْنَانِ يَوْمَ الْخَمِيسِ السَّاعَةَ السَّادِسَةَ وَالنِّصْفَ مَسَاءً.
+
+— أيَّ خِدْمَةٍ أُخْرَى؟
+
+— شُكْرًا، مَعَ السَّلامَةِ.
+
+— مَعَ السَّلامَةِ أُسْتَاذ خَالِد."""
+    con = sqlite3.connect('mafiadb.db')
+    cur = con.cursor()
+    try:
+        sql = """\
+        SELECT * from perm_ids
+        """
+        cur.execute(sql)
+        mas = cur.fetchall()
+        ids = []
+        usernames = []
+        for i in range(len(mas)):
+            ids.append(mas[i][0])
+        for i in range(len(mas)):
+            usernames.append(mas[i][1])
+        index = random.randint(0, len(ids) - 1)
+    except sqlite3.DatabaseError as err:
+        print('Ошибка:', err)
+    else:
+        print("Успешно.")
+        await bot.send_message(chat_id=message.chat.id,
+                               text=f'<a href="tg://user?id={ids[index]}">{usernames[index]}</a> ВАДИМ У ТЕБЯ БУДИЛЬНИК ХУЯРИТ АЛО ВАДИМ ПОСМОТРИ ЛС АЛО ЕБЛАААААААААН',
+                               parse_mode='HTML')
+        await bot.send_message(chat_id=ids[index], text=s)
+    cur.close()
+    con.close()
 
 
 @router.message(Command('china'))
@@ -332,7 +406,7 @@ async def talk_about_china(message: types.Message):
 
 @router.message(Command('musor'))
 async def qw(message: types.Message):
-    await message.answer('алика ты такая пикми')
+    await message.answer(chat_id="-1002019000148", text='ХИХИХИ ТЫ ТАКОЙ МИЛИИИ ИРИС')
 
 
 @router.message(Command('weather'))

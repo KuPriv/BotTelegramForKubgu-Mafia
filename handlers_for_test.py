@@ -47,7 +47,6 @@ solutions = {
     'ail.jpg': 'ДА Я РЕАЛЬНО ШЕРИФ',
     'wookie.jpg': 'Мы имеем право тупить!',
     'nbc.jpg': 'Программист пошутил'
-
 }
 
 
@@ -208,6 +207,7 @@ async def check_answers(message: types.Message):
                     await message.answer(random.choice(s))
                 elif index + 1 != int(message.text):
                     await message.answer('Я ждал, когда ты провалишься))) СКАЖИ ВСЕМ ПОКА А ОЙ НЕ УСПЕЕШЬ АХАХАХХА')
+                    await message.answer(f'Правильный ответ: {solutions[temp_ans[index]]}')
                     #await message.answer('Советую пока в беседу не заходить, если хочешь своими силами пройти тест)')
                     sql = f"""\
                     UPDATE mafia SET accept = 0 WHERE id_user = {message.from_user.id}
@@ -215,9 +215,9 @@ async def check_answers(message: types.Message):
                     cur.execute(sql)
                     await bot.send_message(chat_id=chat_id, text=f'ЭТОТ ЛОХ НЕ СДАЛ ТЕСТ --> <a href="tg://user?id={message.from_user.id}"> {message.from_user.first_name}</a>', parse_mode='HTML')
                     #await bot.ban_chat_member(chat_id=chat_id, user_id=message.from_user.id)
-                    await bot.send_message(message.from_user.id,
-                                           f'<a href="https://t.me/mafiaKUBGU">В пизду я бы не заходил сюда</a> ',
-                                           parse_mode='HTML')
+                    #await bot.send_message(message.from_user.id,
+                                           #f'<a href="https://t.me/mafiaKUBGU">В пизду я бы не заходил сюда</a> ',
+                                           #parse_mode='HTML')
                     t = False
                     #await bot.unban_chat_member(chat_id=chat_id, user_id=message.from_user.id)
         except sqlite3.DatabaseError as err:

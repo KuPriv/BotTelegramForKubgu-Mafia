@@ -15,7 +15,7 @@ from aiogram.filters.chat_member_updated import (
 )
 from aiogram.types import FSInputFile, URLInputFile
 
-from long_strings_for_handlers import shuti_text, arabic_symbols, china_text
+from bot_handlers.long_strings_for_handlers import shuti_text, arabic_symbols, china_text
 
 # загрузка секретов из .env
 # Так же было бы славно перевести везде в капс.

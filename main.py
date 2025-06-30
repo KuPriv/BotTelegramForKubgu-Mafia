@@ -1,16 +1,20 @@
 import asyncio
 import logging
+from dotenv import load_dotenv
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
-from config_for_test import token
-import handlers, handlers_for_test
+from BotTelegramForKubgu.bot_handlers import handlers, handlers_for_test
+
+# загрузка токена из .env
+load_dotenv()
+TOKEN = os.getenv("TOKEN")
 
 
 async def main():
-    bot = Bot(token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    bot = Bot(TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_routers(handlers.router, handlers_for_test.router)
 

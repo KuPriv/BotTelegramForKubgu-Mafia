@@ -68,8 +68,7 @@ async def temp_use(message):
                     files = gen.split(" ")
                     ans = arr[0][3]
                     arr_temps: list = ans.split(" ")
-                    if arr_temps[0] == "":
-                        arr_temps.remove("")
+                    arr_temps = [x for x in arr_temps if x]
                     if len(arr_temps) != len(files):
                         print(arr_temps)
                         print(files)

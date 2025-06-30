@@ -24,6 +24,11 @@ load_dotenv()
 token = os.getenv("TOKEN")
 my_id = os.getenv("MY_ID")
 chat_id = os.getenv("CHAT_ID")
+shiro_id, bezvreda_id, makima_id = (
+    os.getenv("shiro_id"),
+    os.getenv("bezvreda_id"),
+    os.getenv("makima_id"),
+)
 
 bot = Bot(token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 router = Router()
@@ -83,6 +88,17 @@ async def handle_invite_request(message: types.Message):
             await message.answer(f"Произошла ошибка: {e}")
 
 
+async def get_usernames_list(cur: sqlite3.Cursor) -> tuple:
+    mas = cur.fetchall()
+    ids = []
+    usernames = []
+    for i in range(len(mas)):
+        ids.append(mas[i][0])
+    for i in range(len(mas)):
+        usernames.append(mas[i][1])
+    return ids, usernames
+
+
 @router.message(Command("accepted"))
 async def misha_house(message: types.Message):
     with sqlite3.connect("../db/mafiadb.db") as con:
@@ -91,18 +107,10 @@ async def misha_house(message: types.Message):
             SELECT * FROM perm_ids WHERE complete = 1
             """
             try:
-                cur.execute(sql)
-                mas = cur.fetchall()
-                ids = []
-                usernames = []
-                for i in range(len(mas)):
-                    ids.append(mas[i][0])
-                for i in range(len(mas)):
-                    usernames.append(mas[i][1])
+                ids, usernames = await get_usernames_list(cur)
                 s = """"""
                 for i in range(len(ids)):
-                    if ids[i] != 1239883887:
-                        s += f'<a href="tg://user?id={ids[i]}"> {usernames[i]}</a>\n'
+                    s += f'<a href="tg://user?id={ids[i]}"> {usernames[i]}</a>\n'
                 print(s)
                 await message.answer(
                     text=f"Список людей допущенных до квартирника у марки:\n {s}"
@@ -123,18 +131,9 @@ async def who_did_test(message: types.Message):
                 SELECT * FROM perm_ids
                 """
             try:
-                print(1)
-                cur.execute(sql)
-                mas = cur.fetchall()
-                ids = []
-                usernames = []
-                for i in range(len(mas)):
-                    ids.append(mas[i][0])
-                for i in range(len(mas)):
-                    usernames.append(mas[i][1])
+                ids, usernames = await get_usernames_list(cur)
                 print(ids)
                 print(usernames)
-                index = 0
                 for i in range(int((len(ids) / 5)) + 1):
                     s = """"""
                     if len(ids) - (i * 5) >= 5:
@@ -151,29 +150,6 @@ async def who_did_test(message: types.Message):
                 print("Ошибка:", err)
             else:
                 print("Успешно.")
-
-
-@router.message(Command("bye22"))
-async def ban_me(message: types.Message):
-    await bot.ban_chat_member(chat_id=message.chat.id, user_id=my_id)
-    print("Handled command 'bye'")
-
-
-@router.message(Command("silly"))
-async def us(message: types.Message):
-    directory = "png_for_bot/"
-    files = os.listdir(directory)
-    file: str = directory + random.choice(files)
-    agenda = FSInputFile(path=file, filename="попка дурак")
-    await message.answer("/silly dlya ne silly")
-    await bot.send_photo(chat_id=message.chat.id, photo=agenda)
-
-
-@router.message(Command("maf"))
-async def us(message: types.Message):
-    await bot.send_message(
-        chat_id="6643633703", text="ти педик бугагаг (я твое сообщени не вижу)"
-    )
 
 
 @router.message(Command("send_danya"))
@@ -219,8 +195,6 @@ async def unban_user(message: types.Message):
 
 @router.message(Command("song"))
 async def send_songs(message: types.Message):
-    # audio = FSInputFile('nervy-kofe-mojj-drug.mp3')
-    # await bot.send_audio(message.chat.id, audio)
     audio_file = URLInputFile(
         "https://muzwild.net/upload_file/66a2c65973e986.43660759.mp3",
         filename="sirop.mp3",
@@ -231,7 +205,6 @@ async def send_songs(message: types.Message):
         "Мои Supreme трусы испачканы в сиропе\n"
         "А всё из-за того, что штаны спущены до жопы"
     )
-    # await message.answer("Нервы ура!")
 
 
 @router.message(Command("shuti_lock"))
@@ -259,19 +232,19 @@ async def clean_bot_messages(message: types.Message):
 @router.message(Command("makima"))
 async def best_func(message: types.Message):
     await bot.send_message(
-        chat_id=813252640,
+        chat_id=makima_id,
         text=f"Я тебя люблю!!! вызвал: {message.from_user.first_name}",
     )
 
 
 @router.message(lambda message: "развод" in message.text.lower())
 async def same(message: types.Message):
-    users_id = ("1798427554", "1049132960")
+    users_id = (shiro_id, bezvreda_id)
     if str(message.from_user.id) in users_id:
         print("Ya tut")
         await asyncio.sleep(3)
-        s1 = f'<a href="tg://user?id=1798427554"> @Shiro0ri </a>'
-        s2 = f'<a href="tg://user?id=1049132960">@bezvreda1</a>'
+        s1 = f'<a href="tg://user?id={shiro_id}"> @Shiro0ri </a>'
+        s2 = f'<a href="tg://user?id={bezvreda_id}">@bezvreda1</a>'
         s = "поженить пару" + s1 + s2
         await message.answer(s, parse_mode="HTML")
 
@@ -308,13 +281,7 @@ async def same3(message: types.Message):
                 SELECT * from perm_ids
                 """
                 cur.execute(sql)
-                mas = cur.fetchall()
-                ids = []
-                usernames = []
-                for i in range(len(mas)):
-                    ids.append(mas[i][0])
-                for i in range(len(mas)):
-                    usernames.append(mas[i][1])
+                ids, usernames = await get_usernames_list(cur)
                 index = random.randint(0, len(ids) - 1)
             except sqlite3.DatabaseError as err:
                 print("Ошибка:", err)
@@ -331,16 +298,3 @@ async def same3(message: types.Message):
 @router.message(Command("china"))
 async def talk_about_china(message: types.Message):
     await message.answer(china_text)
-
-
-@router.message(Command("musor"))
-async def qw(message: types.Message):
-    await message.answer(chat_id="-1002019000148", text="ХИХИХИ ТЫ ТАКОЙ МИЛИИИ ИРИС")
-
-
-@router.message(Command("weather"))
-async def krasniyday(message: types.Message):
-    df = pd.read_html(
-        "https://rp5.ru/%D0%9F%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0_%D0%B2_%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%BE%D0%B4%D0%B0%D1%80%D0%B5,_%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%BE%D0%B4%D0%B0%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%BA%D1%80%D0%B0%D0%B9"
-    )
-    print(df[8][0:10])

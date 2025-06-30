@@ -21,7 +21,7 @@ token = os.getenv("TOKEN")
 bot = Bot(token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 router = Router()
 
-directory = "mafia_photos/"
+directory = "./../photos_and_videos/mafia_photos"
 solutions = {
     "efim.jpg": "Биг Босс в игре",
     "danya.jpg": "Пьешь - не трожь нож",
@@ -59,9 +59,8 @@ async def temp_use(message):
         print("handled temp_use()")
         with sqlite3.connect("../db/mafiadb.db") as con:
             with con.cursor() as cur:
-                sql = f"""\
-                SELECT * from mafia WHERE id_user = {message.from_user.id}
-                """
+                sql = f"""SELECT * from mafia WHERE id_user = ?"""
+                cur.execute(sql, (message.from_user.id,))
                 try:
                     cur.execute(sql)
                     arr = cur.fetchall()
@@ -102,9 +101,16 @@ async def temp_use(message):
                         builder.adjust(2)
                         temp_sol = " ".join(maybe_solutions)
                         sql = f"""\
-                            UPDATE mafia SET answered = '{ans}', temp = '{temp_sol}' WHERE id_user = {message.from_user.id}
+                            UPDATE mafia SET answered = ?, temp = ? WHERE id_user = ?
                         """
-                        cur.execute(sql)
+                        cur.execute(
+                            sql,
+                            (
+                                ans,
+                                temp_sol,
+                                message.from_user.id,
+                            ),
+                        )
                         await message.answer(
                             "Ну и че думаешь?",
                             reply_markup=builder.as_markup(
@@ -116,14 +122,14 @@ async def temp_use(message):
                             "Поздравляем! вы истинный чебурек! я бы тебя в землю втоптал милаш."
                         )
                         sql = f"""\
-                        UPDATE perm_ids SET complete = 1 WHERE id_user = {message.from_user.id}
+                        UPDATE perm_ids SET complete = 1 WHERE id_user = ?
                         """
+                        cur.execute(sql, (message.from_user.id,))
                         await bot.send_message(
                             chat_id=chat_id,
                             text=f'Поздравляем <a href="tg://user?id={message.from_user.id}"> {message.from_user.first_name}</a> с прохождением теста!',
                             parse_mode="HTML",
                         )
-                        cur.execute(sql)
                 except sqlite3.DatabaseError as err:
                     print("Ошибки: ", err)
                 else:
@@ -146,13 +152,13 @@ async def start_test(message: types.Message):
                 INSERT or IGNORE INTO mafia (id_user, username) VALUES (?,?)
                 """
                 sql_test = f"""\
-                UPDATE mafia SET generated = '' and answered = '', accept = 1 where id_user = {id_user}
+                UPDATE mafia SET generated = '' and answered = '', accept = 1 where id_user = ?
                 """
                 try:
                     cort = (id_user, username)
                     cur.execute(sql, cort)
                     cur.execute(sql_maf, cort)
-                    cur.execute(sql_test)
+                    cur.execute(sql_test, (id_user,))
                 except sqlite3.DatabaseError as err:
                     print("Ошибка:", err)
                 else:
@@ -185,10 +191,17 @@ async def start_test(message: types.Message):
         with sqlite3.connect("../db/mafiadb.db") as con:
             with con.cursor() as cur:
                 sql = f"""\
-                UPDATE mafia SET generated = '{s}', answered = '' WHERE id_user = {message.from_user.id}
+                UPDATE mafia SET generated = ?, answered = ? WHERE id_user = ?
                 """
                 try:
-                    cur.execute(sql)
+                    cur.execute(
+                        sql,
+                        (
+                            s,
+                            "",
+                            message.from_user.id,
+                        ),
+                    )
                 except sqlite3.DatabaseError as err:
                     print("Ошибка: ", err)
                 else:
@@ -205,10 +218,10 @@ async def check_answers(message: types.Message):
         with sqlite3.connect("../db/mafiadb.db") as con:
             with con.cursor() as cur:
                 sql = f"""\
-                SELECT * from mafia WHERE id_user = {message.from_user.id}
+                SELECT * from mafia WHERE id_user = ?
                 """
                 try:
-                    cur.execute(sql)
+                    cur.execute(sql, (message.from_user.id,))
                     arr = cur.fetchall()
                     if arr[0][5] == 1:
                         ans = arr[0][3]
@@ -237,10 +250,10 @@ async def check_answers(message: types.Message):
                                 f"Правильный ответ: {solutions[temp_ans[index]]}"
                             )
                             sql = f"""\
-                            UPDATE mafia SET accept = 0 WHERE id_user = {message.from_user.id}
+                            UPDATE mafia SET accept = 0 WHERE id_user = ?
                             """
-                            cur.execute(sql)
-                            if message.from_user.id == 2096676129:
+                            cur.execute(sql, (message.from_user.id,))
+                            if message.from_user.id == os.getenv("misha_id"):
                                 await bot.send_message(
                                     chat_id=chat_id,
                                     text=f'Ты свою квартиру проебал, ключи от хаты давай. --> <a href="tg://user?id={message.from_user.id}"> {message.from_user.first_name}</a>',

@@ -180,7 +180,11 @@ async def start_test(message: types.Message):
 @router.message(F.text.lower() == "начать тест boss of the gym")
 async def start_test(message: types.Message):
     if message.chat.type == "private":
-        files = os.listdir(directory)
+
+        @lru_cache(maxsize=1)
+        def get_directory_files():
+            return os.listdir(directory)
+
         random.shuffle(files)
         await message.answer("Тест на адекватность начат.")
         for i in range(3):

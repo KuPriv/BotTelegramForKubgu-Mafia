@@ -2,7 +2,6 @@ import asyncio
 import os
 import random
 import sqlite3
-import pandas as pd
 from dotenv import load_dotenv
 
 from aiogram import Bot, types, Router

@@ -10,13 +10,13 @@ from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters import Command
 
 from aiogram.types import FSInputFile
-from config import chat_id
 from aiogram import F
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 # выгрузка токена из .env
 load_dotenv()
 token = os.getenv("TOKEN")
+chat_id = os.getenv("CHAT_ID")
 
 bot = Bot(token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 router = Router()

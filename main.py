@@ -7,7 +7,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
-from BotTelegramForKubgu.bot_handlers import handlers, handlers_for_test
+from bot_handlers import handlers, handlers_for_test
 
 # загрузка токена из .env
 load_dotenv()

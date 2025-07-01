@@ -16,7 +16,11 @@ from aiogram.filters.chat_member_updated import (
 )
 from aiogram.types import FSInputFile, URLInputFile
 
-from bot_handlers.long_strings_for_handlers import shuti_text, arabic_symbols, china_text
+from bot_handlers.long_strings_for_handlers import (
+    shuti_text,
+    arabic_symbols,
+    china_text,
+)
 
 # загрузка секретов из .env
 # Так же было бы славно перевести везде в капс.
@@ -95,15 +99,15 @@ async def handle_invite_request(message: types.Message):
 async def get_usernames_list(cur: sqlite3.Cursor) -> tuple:
     logging.warning("Зашли в get_usernames_list")
     mas = cur.fetchall()
-    logging.warning('mas: %s', mas)
+    logging.warning("mas: %s", mas)
     ids = []
     usernames = []
     for i in range(len(mas)):
         ids.append(mas[i][0])
     for i in range(len(mas)):
         usernames.append(mas[i][1])
-    logging.warning('ids: %s', ids)
-    logging.warning('usernames: %s', usernames)
+    logging.warning("ids: %s", ids)
+    logging.warning("usernames: %s", usernames)
     return ids, usernames, cur
 
 
@@ -132,7 +136,6 @@ async def misha_house(message: types.Message):
             print("Успешно.")
         finally:
             cur.close()
-
 
 
 @router.message(Command("tag"))
@@ -253,13 +256,16 @@ async def best_func(message: types.Message):
 @router.message(lambda message: "развод" in message.text.lower())
 async def same(message: types.Message):
     users_id = (shiro_id, bezvreda_id)
-    if str(message.from_user.id) in users_id:
-        print("Ya tut")
-        await asyncio.sleep(3)
-        s1 = f'<a href="tg://user?id={shiro_id}"> @Shiro0ri </a>'
-        s2 = f'<a href="tg://user?id={bezvreda_id}">@bezvreda1</a>'
-        s = "поженить пару" + s1 + s2
-        await message.answer(s, parse_mode="HTML")
+    try:
+        if str(message.from_user.id) in users_id:
+            print("Ya tut")
+            await asyncio.sleep(3)
+            s1 = f'<a href="tg://user?id={shiro_id}"> @Shiro0ri </a>'
+            s2 = f'<a href="tg://user?id={bezvreda_id}">@bezvreda1</a>'
+            s = "поженить пару" + s1 + s2
+            await message.answer(s, parse_mode="HTML")
+    except Exception as e:
+        pass
 
 
 @router.message(Command("nasrek"))

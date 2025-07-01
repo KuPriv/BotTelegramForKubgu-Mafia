@@ -66,7 +66,10 @@ solutions = {
 
 async def temp_use(message):
     if message.chat.type == "private":
-        print("handled temp_use(), %s", time.asctime())
+        print(
+            "handled temp_use() by %s in  %s"
+            % (message.from_user.username, time.asctime())
+        )
         with sqlite3.connect(DB_PATH) as con:
             cur = con.cursor()
             sql = f"""SELECT * from mafia WHERE id_user = ?"""
@@ -79,8 +82,6 @@ async def temp_use(message):
                 arr_temps: list = ans.split(" ")
                 arr_temps = [x for x in arr_temps if x]
                 if len(arr_temps) != len(files):
-                    print(arr_temps)
-                    print(files)
                     temp = random.choice(files)
                     while temp in arr_temps:
                         temp = random.choice(files)

@@ -3,6 +3,7 @@ import logging
 import os
 import random
 import sqlite3
+import time
 from functools import lru_cache
 from dotenv import load_dotenv
 
@@ -65,7 +66,7 @@ solutions = {
 
 async def temp_use(message):
     if message.chat.type == "private":
-        print("handled temp_use()")
+        print("handled temp_use(), %s", time.asctime())
         with sqlite3.connect(DB_PATH) as con:
             cur = con.cursor()
             sql = f"""SELECT * from mafia WHERE id_user = ?"""
@@ -149,7 +150,7 @@ async def temp_use(message):
 @router.message(Command("start"))
 async def start_test(message: types.Message):
     if message.chat.type == "private":
-        print(f"handled start_test(), {message.from_user.first_name}")
+        logging.info(f"handled start_test() - {user} - {time.asctime()}")
         id_user = message.from_user.id
         username = message.from_user.first_name
         with sqlite3.connect(DB_PATH) as con:

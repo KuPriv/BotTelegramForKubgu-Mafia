@@ -1,6 +1,7 @@
 import asyncio
 import os
 import random
+import logging
 import sqlite3
 from dotenv import load_dotenv
 
@@ -28,6 +29,10 @@ shiro_id, bezvreda_id, makima_id = (
     os.getenv("bezvreda_id"),
     os.getenv("makima_id"),
 )
+
+# Устанавливаю путь до mafiadb.db
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "..", "db", "mafiadb.db")
 
 bot = Bot(token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 router = Router()
@@ -88,67 +93,76 @@ async def handle_invite_request(message: types.Message):
 
 
 async def get_usernames_list(cur: sqlite3.Cursor) -> tuple:
+    logging.warning("Зашли в get_usernames_list")
     mas = cur.fetchall()
+    logging.warning('mas: %s', mas)
     ids = []
     usernames = []
     for i in range(len(mas)):
         ids.append(mas[i][0])
     for i in range(len(mas)):
         usernames.append(mas[i][1])
-    return ids, usernames
+    logging.warning('ids: %s', ids)
+    logging.warning('usernames: %s', usernames)
+    return ids, usernames, cur
 
 
 @router.message(Command("accepted"))
 async def misha_house(message: types.Message):
-    with sqlite3.connect("../db/mafiadb.db") as con:
-        with con.cursor() as cur:
-            sql = """\
-            SELECT * FROM perm_ids WHERE complete = 1
-            """
-            try:
-                ids, usernames = await get_usernames_list(cur)
-                s = """"""
-                for i in range(len(ids)):
-                    s += f'<a href="tg://user?id={ids[i]}"> {usernames[i]}</a>\n'
-                print(s)
-                await message.answer(
-                    text=f"Список людей допущенных до квартирника у марки:\n {s}"
-                    f" В черном списке: Никого",
-                    parse_mode="HTML",
-                )
-            except sqlite3.DatabaseError as err:
-                print("Ошибка:", err)
-            else:
-                print("Успешно.")
+    with sqlite3.connect(DB_PATH) as con:
+        cur = con.cursor()
+        sql = """\
+        SELECT * FROM perm_ids WHERE complete = 1
+        """
+        try:
+            cur.execute(sql)
+            ids, usernames, cur = await get_usernames_list(cur)
+            s = """"""
+            for i in range(len(ids)):
+                s += f'<a href="tg://user?id={ids[i]}"> {usernames[i]}</a>\n'
+            print(s)
+            await message.answer(
+                text=f"Список людей допущенных до квартирника у марки:\n {s}"
+                f" В черном списке: Никого",
+                parse_mode="HTML",
+            )
+        except sqlite3.DatabaseError as err:
+            print("Ошибка:", err)
+        else:
+            print("Успешно.")
+        finally:
+            cur.close()
+
 
 
 @router.message(Command("tag"))
 async def who_did_test(message: types.Message):
-    with sqlite3.connect("../db/mafiadb.db") as con:
-        with con.cursor() as cur:
-            sql = """\
-                SELECT * FROM perm_ids
-                """
-            try:
-                ids, usernames = await get_usernames_list(cur)
-                print(ids)
-                print(usernames)
-                for i in range(int((len(ids) / 5)) + 1):
-                    s = """"""
-                    if len(ids) - (i * 5) >= 5:
-                        for j in range(5):
-                            s += f'<a href="tg://user?id={ids[(i * 5) + j]}"> {usernames[(i * 5) + j]}</a> '
-                            print(ids[(i * 5) + j], usernames[(i * 5) + j])
-                    else:
-                        for j in range(len(ids) - (i * 5)):
-                            s += f'<a href="tg://user?id={ids[(i * 5) + j]}"> {usernames[(i * 5) + j]}</a> '
-                            print(ids[(i * 5) + j], usernames[(i * 5) + j])
-                    await message.answer(text=s, parse_mode="HTML")
+    with sqlite3.connect(DB_PATH) as con:
+        cur = con.cursor()
+        sql = """\
+            SELECT * FROM perm_ids
+            """
+        try:
+            cur.execute(sql)
+            ids, usernames, cur = await get_usernames_list(cur)
+            print(ids)
+            print(usernames)
+            for i in range(int((len(ids) / 5)) + 1):
+                s = """"""
+                if len(ids) - (i * 5) >= 5:
+                    for j in range(5):
+                        s += f'<a href="tg://user?id={ids[(i * 5) + j]}"> {usernames[(i * 5) + j]}</a> '
+                else:
+                    for j in range(len(ids) - (i * 5)):
+                        s += f'<a href="tg://user?id={ids[(i * 5) + j]}"> {usernames[(i * 5) + j]}</a> '
+                await message.answer(text=s, parse_mode="HTML")
 
-            except sqlite3.DatabaseError as err:
-                print("Ошибка:", err)
-            else:
-                print("Успешно.")
+        except sqlite3.DatabaseError as err:
+            print("Ошибка:", err)
+        else:
+            print("Успешно.")
+        finally:
+            cur.close()
 
 
 @router.message(Command("send_danya"))
@@ -273,25 +287,27 @@ async def best_func(message: types.Message):
 
 @router.message(Command("pigeon"))
 async def same3(message: types.Message):
-    with sqlite3.connect("../db/mafiadb.db") as con:
-        with con.cursor() as cur:
-            try:
-                sql = """\
-                SELECT * from perm_ids
-                """
-                cur.execute(sql)
-                ids, usernames = await get_usernames_list(cur)
-                index = random.randint(0, len(ids) - 1)
-            except sqlite3.DatabaseError as err:
-                print("Ошибка:", err)
-            else:
-                print("Успешно.")
-                await bot.send_message(
-                    chat_id=message.chat.id,
-                    text=f'<a href="tg://user?id={ids[index]}">{usernames[index]}</a> ВАДИМ У ТЕБЯ БУДИЛЬНИК ХУЯРИТ АЛО ВАДИМ ПОСМОТРИ ЛС АЛО ЕБЛАААААААААН',
-                    parse_mode="HTML",
-                )
-                await bot.send_message(chat_id=ids[index], text=arabic_symbols)
+    with sqlite3.connect(DB_PATH) as con:
+        cur = con.cursor()
+        try:
+            sql = """\
+            SELECT * from perm_ids
+            """
+            cur.execute(sql)
+            ids, usernames, cur = await get_usernames_list(cur)
+            index = random.randint(0, len(ids) - 1)
+        except sqlite3.DatabaseError as err:
+            print("Ошибка:", err)
+        else:
+            print("Успешно.")
+            await bot.send_message(
+                chat_id=message.chat.id,
+                text=f'<a href="tg://user?id={ids[index]}">{usernames[index]}</a> ВАДИМ У ТЕБЯ БУДИЛЬНИК ХУЯРИТ АЛО ВАДИМ ПОСМОТРИ ЛС АЛО ЕБЛАААААААААН',
+                parse_mode="HTML",
+            )
+            await bot.send_message(chat_id=ids[index], text=arabic_symbols)
+        finally:
+            cur.close()
 
 
 @router.message(Command("china"))

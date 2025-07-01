@@ -84,7 +84,7 @@ async def temp_use(message):
                     temp = random.choice(files)
                     while temp in arr_temps:
                         temp = random.choice(files)
-                    file = PHOTOS_PATH + '/' + temp
+                    file = PHOTOS_PATH + "/" + temp
                     arr_temps.append(temp)
                     ans = " ".join(arr_temps)
                     photo = FSInputFile(path=file, filename=temp)
@@ -150,9 +150,9 @@ async def temp_use(message):
 @router.message(Command("start"))
 async def start_test(message: types.Message):
     if message.chat.type == "private":
-        logging.info(f"handled start_test() - {user} - {time.asctime()}")
         id_user = message.from_user.id
         username = message.from_user.first_name
+        logging.info(f"handled start_test() - {username} - {time.asctime()}")
         with sqlite3.connect(DB_PATH) as con:
             cur = con.cursor()
             sql = """\
@@ -197,8 +197,9 @@ async def start_test(message: types.Message):
         @lru_cache(maxsize=1)
         def get_directory_files():
             return os.listdir(PHOTOS_PATH)
+
         files = get_directory_files()
-        logging.warning('files photos: %s', files)
+        logging.warning("files photos: %s", files)
         random.shuffle(files)
         await message.answer("Тест на адекватность начат.")
         for i in range(3):
@@ -256,10 +257,7 @@ async def check_answers(message: types.Message):
                         "тебе бы в русскую рулетку играть...",
                         "да ты бы мишу марки перепил....",
                     ]
-                    if (
-                        index + 1 == int(message.text)
-                        and len(ans) != len(temp_ans) - 1
-                    ):
+                    if index + 1 == int(message.text) and len(ans) != len(temp_ans) - 1:
                         await message.answer(random.choice(s))
                     elif index + 1 != int(message.text):
                         await message.answer(

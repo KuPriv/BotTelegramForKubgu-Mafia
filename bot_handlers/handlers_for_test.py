@@ -83,7 +83,7 @@ async def temp_use(message):
                     temp = random.choice(files)
                     while temp in arr_temps:
                         temp = random.choice(files)
-                    file = PHOTOS_PATH + '\\' + temp
+                    file = PHOTOS_PATH + '/' + temp
                     arr_temps.append(temp)
                     ans = " ".join(arr_temps)
                     photo = FSInputFile(path=file, filename=temp)

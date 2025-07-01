@@ -266,11 +266,6 @@ async def best_func(message: types.Message):
     await message.answer("Фарма")
 
 
-@router.message(lambda message: "с др" in message.text.lower())
-async def same(message: types.Message):
-    await message.answer("От души )")
-
-
 @router.message(Command("iris"))
 async def best_func(message: types.Message):
     await message.answer("Ирис пидорас.")

@@ -253,21 +253,6 @@ async def best_func(message: types.Message):
     )
 
 
-@router.message(lambda message: "развод" in message.text.lower())
-async def same(message: types.Message):
-    users_id = (shiro_id, bezvreda_id)
-    try:
-        if str(message.from_user.id) in users_id:
-            print("Ya tut")
-            await asyncio.sleep(3)
-            s1 = f'<a href="tg://user?id={shiro_id}"> @Shiro0ri </a>'
-            s2 = f'<a href="tg://user?id={bezvreda_id}">@bezvreda1</a>'
-            s = "поженить пару" + s1 + s2
-            await message.answer(s, parse_mode="HTML")
-    except Exception as e:
-        pass
-
-
 @router.message(Command("nasrek"))
 async def best_func(message: types.Message):
     video = FSInputFile(

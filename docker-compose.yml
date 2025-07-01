@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  mafia-bot:
+    build: .
+    container_name: mafia_bot
+    env_file:
+      - .env
+    environment:
+      - TOKEN=${TOKEN}
+      - api_id=${api_id}
+      - api_hash=${api_hash}
+      - MY_ID=${MY_ID}
+      - CHAT_ID=${CHAT_ID}
+      - shiro_id=${shiro_id}
+      - bezvreda_id=${bezvreda_id}
+      - makima_id=${makima_id}
+      - misha_id=${misha_id}
+    volumes:
+      - ./db:/app/db
+      - ./photos_and_videos:/app/photos_and_videos
+      - ./bot_handlers:/app/bot_handlers
+      - ./main.py:/app/main.py
+    restart: unless-stopped

@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6c559af7-981f-4152-adae-644a64682a2d" name="Changes" comment="docs: update readme.MD">
-      <change afterPath="$PROJECT_DIR$/send_single_message.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+    <list default="true" id="6c559af7-981f-4152-adae-644a64682a2d" name="Changes" comment="feat: add opportunity for send messages from console with asycnio">
+      <change beforePath="$PROJECT_DIR$/bot_handlers/handlers.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot_handlers/handlers.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +201,7 @@
       <workItem from="1751350255743" duration="10383000" />
       <workItem from="1751363547738" duration="60000" />
       <workItem from="1751363616451" duration="1105000" />
-      <workItem from="1751364744064" duration="5053000" />
+      <workItem from="1751364744064" duration="5485000" />
     </task>
     <task id="LOCAL-00001" summary="chore: take secret info from .env">
       <option name="closed" value="true" />
@@ -350,7 +347,31 @@
       <option name="project" value="LOCAL" />
       <updated>1751359229310</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="chore: add .idea files">
+      <option name="closed" value="true" />
+      <created>1751370136168</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1751370136168</updated>
+    </task>
+    <task id="LOCAL-00020" summary="chore: add aioconsole in requirements.txt">
+      <option name="closed" value="true" />
+      <created>1751370159819</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1751370159819</updated>
+    </task>
+    <task id="LOCAL-00021" summary="feat: add opportunity for send messages from console with asycnio">
+      <option name="closed" value="true" />
+      <created>1751370261447</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1751370261447</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -362,7 +383,6 @@
     <MESSAGE value="chore: change import path to handlers" />
     <MESSAGE value="chore: add requirements.txt" />
     <MESSAGE value="chore: change path to text for handlers" />
-    <MESSAGE value="chore: add .idea files" />
     <MESSAGE value="feat and fix: change some logic and do correct work after refactor structure" />
     <MESSAGE value="feat(docker): initial docker and docker-compose setup" />
     <MESSAGE value="fix: set correct path for reading files" />
@@ -371,7 +391,10 @@
     <MESSAGE value="docs: add much detailed file for readme.MD" />
     <MESSAGE value="chore: add .idea file" />
     <MESSAGE value="docs: update readme.MD" />
-    <option name="LAST_COMMIT_MESSAGE" value="docs: update readme.MD" />
+    <MESSAGE value="chore: add .idea files" />
+    <MESSAGE value="chore: add aioconsole in requirements.txt" />
+    <MESSAGE value="feat: add opportunity for send messages from console with asycnio" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add opportunity for send messages from console with asycnio" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/BotTelegramForKubgu$1.coverage" NAME="1 Coverage Results" MODIFIED="1751358204273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

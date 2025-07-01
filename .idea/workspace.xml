@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6c559af7-981f-4152-adae-644a64682a2d" name="Changes" comment="chore: add .idea file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot_handlers/handlers_for_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot_handlers/handlers_for_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot_handlers/handlers.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot_handlers/handlers.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +61,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -203,7 +203,8 @@
       <workItem from="1751363547738" duration="60000" />
       <workItem from="1751363616451" duration="1105000" />
       <workItem from="1751364744064" duration="6350000" />
-      <workItem from="1751372459271" duration="237000" />
+      <workItem from="1751372459271" duration="407000" />
+      <workItem from="1751372881588" duration="8000" />
     </task>
     <task id="LOCAL-00001" summary="chore: take secret info from .env">
       <option name="closed" value="true" />
@@ -389,7 +390,23 @@
       <option name="project" value="LOCAL" />
       <updated>1751370606307</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="fix: use param before declaration">
+      <option name="closed" value="true" />
+      <created>1751372778353</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1751372778353</updated>
+    </task>
+    <task id="LOCAL-00025" summary="chore: add .idea file">
+      <option name="closed" value="true" />
+      <created>1751372790142</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1751372790142</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -412,6 +429,7 @@
     <MESSAGE value="chore: add aioconsole in requirements.txt" />
     <MESSAGE value="feat: add opportunity for send messages from console with asycnio" />
     <MESSAGE value="fix: add try-except block for &quot;same()&quot; func in handlers" />
+    <MESSAGE value="fix: use param before declaration" />
     <MESSAGE value="chore: add .idea file" />
     <option name="LAST_COMMIT_MESSAGE" value="chore: add .idea file" />
   </component>

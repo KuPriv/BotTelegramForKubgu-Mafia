@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6c559af7-981f-4152-adae-644a64682a2d" name="Changes" comment="chore: add .idea file" />
+    <list default="true" id="6c559af7-981f-4152-adae-644a64682a2d" name="Changes" comment="chore: add .idea file">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot_handlers/handlers.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot_handlers/handlers.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -202,6 +205,8 @@
       <workItem from="1751364744064" duration="6350000" />
       <workItem from="1751372459271" duration="407000" />
       <workItem from="1751372881588" duration="52000" />
+      <workItem from="1751372948125" duration="76000" />
+      <workItem from="1751373314221" duration="103000" />
     </task>
     <task id="LOCAL-00001" summary="chore: take secret info from .env">
       <option name="closed" value="true" />
@@ -419,7 +424,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751372921743</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="chore: add .idea file">
+      <option name="closed" value="true" />
+      <created>1751372974344</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1751372974344</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

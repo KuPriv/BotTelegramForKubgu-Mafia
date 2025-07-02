@@ -5,7 +5,7 @@ import logging
 import sqlite3
 from dotenv import load_dotenv
 
-from aiogram import Bot, types, Router
+from aiogram import Bot, types, Router, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters import Command
@@ -22,11 +22,15 @@ from bot_handlers.long_strings_for_handlers import (
     china_text,
 )
 
+from faster_whisper import WhisperModel
+from pydub import AudioSegment
+
 # загрузка секретов из .env
 # Так же было бы славно перевести везде в капс.
 load_dotenv()
 token = os.getenv("TOKEN")
 my_id = os.getenv("MY_ID")
+my_id = int(my_id)
 chat_id = os.getenv("CHAT_ID")
 shiro_id, bezvreda_id, makima_id = (
     os.getenv("shiro_id"),
@@ -177,7 +181,7 @@ async def us(message: types.Message):
 
 
 @router.message(Command("send_sobak"))
-async def us2(message: types.Message):
+async def us2():
     agenda = FSInputFile(
         path="../photos_and_videos/png_for_functions_handlers/sobak.png",
         filename="sobak.png",
@@ -192,7 +196,7 @@ async def tronula(message: types.Message):
 
 
 @router.message(Command("hi"))
-async def unban_user(message: types.Message):
+async def unban_user():
     print("Handled command 'hi'")
     await bot.restrict_chat_member(
         chat_id=chat_id,
@@ -288,7 +292,8 @@ async def same3(message: types.Message):
             print("Успешно.")
             await bot.send_message(
                 chat_id=message.chat.id,
-                text=f'<a href="tg://user?id={ids[index]}">{usernames[index]}</a> ВАДИМ У ТЕБЯ БУДИЛЬНИК ХУЯРИТ АЛО ВАДИМ ПОСМОТРИ ЛС АЛО ЕБЛАААААААААН',
+                text=f'<a href="tg://user?id={ids[index]}">{usernames[index]}</a> ВАДИМ У ТЕБЯ БУДИЛЬНИК ХУЯРИТ АЛО '
+                f"ВАДИМ ПОСМОТРИ ЛС АЛО ЕБЛАААААААААН",
                 parse_mode="HTML",
             )
             await bot.send_message(chat_id=ids[index], text=arabic_symbols)
@@ -299,3 +304,49 @@ async def same3(message: types.Message):
 @router.message(Command("china"))
 async def talk_about_china(message: types.Message):
     await message.answer(china_text)
+
+
+# Установка модели для работы с аудио
+model = WhisperModel("base", device="cpu", compute_type="float32", num_workers=1)
+
+
+@router.message(F.voice)
+async def handle_voice(message: types.Message):
+    file_info = await message.bot.get_file(message.voice.file_id)
+    downloaded = await message.bot.download_file(file_info.file_path)
+
+    ogg_path = f"voice_{message.message_id}.ogg"
+    wav_path = ogg_path.replace(".ogg", ".wav")
+
+    with open(ogg_path, "wb") as f:
+        f.write(downloaded.getvalue())
+
+    audio = AudioSegment.from_file(ogg_path)
+
+    audio = audio.set_frame_rate(16000)
+    audio = audio.set_channels(1)
+    audio = audio.normalize()
+
+    audio.export(wav_path, format="wav")
+
+    segments, info = model.transcribe(
+        str(wav_path),
+        beam_size=5,
+        language="ru",
+        temperature=0.0,
+        compression_ratio_threshold=2.4,
+        log_prob_threshold=-1.0,
+        no_speech_threshold=0.6,
+        initial_prompt="Это голосовое сообщение на русском языке.",
+    )
+
+    text_segments = []
+    for segment in segments:
+        text_segments.append(segment.text.strip())
+
+    final_text = " ".join(text_segments).strip()
+
+    await message.reply(final_text or "Я дебил мдя.")
+
+    os.remove(ogg_path)
+    os.remove(wav_path)
